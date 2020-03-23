@@ -6,11 +6,11 @@
  *  Partner Name:    N/A
  *  Partner NetID:   N/A
  *  Partner Precept: N/A
- *  
+ *
  *  Compilation:  javac-algs4 PointSET.java
  *  Execution:    java-algs4 PointSET
  *  Dependencies: Point2D.java RectHV.java 
- * 
+ *
  *  Description: Represents a set of points in the unit square 
  *  (all points have x- and y-coordinates between 0 and 1) 
  *  using a red-black BST to support range search 
@@ -23,80 +23,78 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.StdDraw;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 
 public class PointSET {
-	SET<Point2D> pointSet;
-	// construct an empty set of points
-	public PointSET() {
-		pointSet = new SET<>();
-	}
-	// is the set empty? 
-	public boolean isEmpty() {
-		return pointSet.isEmpty();
-	}
-	// number of points in the set 
-	public int size() {
-		return pointSet.size();
-	}
+    private SET<Point2D> pointSet;
 
-	// add the point to the set (if it is not already in the set)
-	public void insert(Point2D p) {
-		pointSet.add(p);
-	}
+    // construct an empty set of points
+    public PointSET() {
+        pointSet = new SET<>();
+    }
 
-	// does the set contain point p? 
-	public boolean contains(Point2D p) {
-		return pointSet.contains(p);
-	}
+    // is the set empty?
+    public boolean isEmpty() {
+        return pointSet.isEmpty();
+    }
 
-	// draw all points to standard draw 
-	public void draw() {
-		for (Point2D next : pointSet) {
-			StdDraw.point(next.x(),next.y());
-		}
-	}
+    // number of points in the set
+    public int size() {
+        return pointSet.size();
+    }
 
-	// all points that are inside the rectangle
-	public Iterable<Point2D> range(RectHV rect) {
-		//lopp through all the points in pointSet
-			//if rect contains it then add it to a list
-		//return list
-		Iterator<Point2D> iter = pointSet.iterator();
-		ArrayList<Point2D> ret = new ArrayList<>();
-		while (iter.hasNext())
-		{
-			Point2D next = iter.next();
-			if(rect.contains(next))
-			{
-				ret.add(next);
-			}
-		}
+    // add the point to the set (if it is not already in the set)
+    public void insert(Point2D p) {
+        if (p == null) throw new IllegalArgumentException();
+        pointSet.add(p);
+    }
 
-		return ret;
-	}
+    // does the set contain point p?
+    public boolean contains(Point2D p) {
+        return pointSet.contains(p);
+    }
 
-	// a nearest neighbor in the set to point p; null if the set is empty 
-	public Point2D nearest(Point2D p) {
-		if(isEmpty()) return null;
-		Point2D nearestPoint = pointSet.min();
-		double curdist = nearestPoint.distanceTo(p);
-		for (Point2D next : pointSet) {
-			if (next.distanceTo(p) < curdist) {
-				curdist = next.distanceTo(p);
-				nearestPoint = next;
-			}
-		}
-		return nearestPoint;
-	}
+    // draw all points to standard draw
+    public void draw() {
+        for (Point2D next : pointSet) {
+            StdDraw.point(next.x(), next.y());
+        }
+    }
 
-	// unit testing of the methods (optional) 
-	public static void main(String[] args) {
+    // all points that are inside the rectangle
+    public Iterable<Point2D> range(RectHV rect) {
+        Iterator<Point2D> iter = pointSet.iterator();
+        ArrayList<Point2D> ret = new ArrayList<>();
+        while (iter.hasNext()) {
+            Point2D next = iter.next();
+            if (rect.contains(next)) {
+                ret.add(next);
+            }
+        }
 
-	}
+        return ret;
+    }
+
+    // a nearest neighbor in the set to point p; null if the set is empty
+    public Point2D nearest(Point2D p) {
+        if (isEmpty()) return null;
+        Point2D nearestPoint = pointSet.min();
+        double curdist = nearestPoint.distanceTo(p);
+        for (Point2D next : pointSet) {
+            if (next.distanceTo(p) < curdist) {
+                curdist = next.distanceTo(p);
+                nearestPoint = next;
+            }
+        }
+        return nearestPoint;
+    }
+
+    // unit testing of the methods (optional)
+    public static void main(String[] args) {
+
+    }
 }
 
 

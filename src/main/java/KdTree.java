@@ -23,7 +23,13 @@ import edu.princeton.cs.algs4.RectHV;
 
 
 public class KdTree {
+  private static class Node{
+    private Point2D p;  // the point
+    private RectHV rect; // the axis-aligned rectangle corresponding to
+    private Node lb; // the left/bottom subtree
+    private Node rt; // the right/top subtree
 
+  }
   // construct an empty set of points
   public KdTree() {
 
