@@ -75,7 +75,7 @@ public class KdTree {
         head = insert(head, p, VERTICAL, 0.0, 0.0, 1.0, 1.0);
     }
 
-    public Node insert(Node cur, Point2D p, boolean isVert,
+    private Node insert(Node cur, Point2D p, boolean isVert,
                        double xmin, double ymin, double xmax, double ymax) {
         if (cur == null) {
             size++;
@@ -137,7 +137,7 @@ public class KdTree {
         }
     }
 
-    static class KDIterator implements Iterator<Point2D> {
+    private static class KDIterator implements Iterator<Point2D> {
         /**
          * Stack to use for iterator.
          */
