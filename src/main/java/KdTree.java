@@ -72,11 +72,14 @@ public class KdTree {
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException("Tried to insert null element into tree");
-        head = insert(head, p, VERTICAL, 0.0, 0.0, 1.0, 1.0);
+        if (!contains(p)) {
+            head = insert(head, p, VERTICAL, 0.0, 0.0, 1.0, 1.0);
+        }
+
     }
 
     private Node insert(Node cur, Point2D p, boolean isVert,
-                       double xmin, double ymin, double xmax, double ymax) {
+                        double xmin, double ymin, double xmax, double ymax) {
         if (cur == null) {
             size++;
             return new Node(p, new RectHV(xmin, ymin, xmax, ymax), isVert);
@@ -187,17 +190,22 @@ public class KdTree {
     public Iterable<Point2D> range(RectHV rect) {
         if (isEmpty()) return null;
         ArrayList<Point2D> arr = new ArrayList<>();
-        return range(head, rect, arr);
+        range(head, rect, arr);
+        return arr;
     }
 
-    private ArrayList<Point2D> range(Node cur, RectHV rect, ArrayList<Point2D> arr) {
-        ArrayList<Point2D> ret = arr;
-        if (cur != null && cur.rect.intersects(rect)) {
-            ret.add(cur.p);
-            ret = range(cur.lb, rect, ret);
-            ret = range(cur.rt, rect, ret);
+    private void range(Node cur, RectHV rect, ArrayList<Point2D> arr) {
+
+        if (cur == null || !cur.rect.intersects(rect)) {
+            return;
         }
-        return ret;
+        if (rect.contains(cur.p)) {
+            arr.add(cur.p);
+
+        }
+        range(cur.lb, rect, arr);
+        range(cur.rt, rect, arr);
+
 
     }
 
@@ -205,32 +213,36 @@ public class KdTree {
     public Point2D nearest(Point2D p) {
         if (isEmpty()) return null;
         Node close = head;
-        double closest = p.distanceTo(head.p);
-        return nearest(p, head, closest, close).p;
+        double closest = p.distanceSquaredTo(head.p);
+        return nearest(p, head, close.p);
     }
 
-    private Node nearest(Point2D p, Node cur, double closest, Node close) {
-        double thisclosest = closest;
-        Node thisclose = close;
-        double newdist = cur.p.distanceTo(p);
-        if (newdist < closest) { // update best node and dist value if cur is best
-            thisclosest = newdist;
-            thisclose = cur;
+    private Point2D nearest(Point2D p, Node cur, Point2D nearestPoint) {
+        // if node null - end of the tree
+        // return nearest
+        if (cur == null) return nearestPoint;
+
+        double thisclosest = nearestPoint.distanceSquaredTo(p);
+
+        if (cur.rect.distanceSquaredTo(p) > thisclosest) {
+            return nearestPoint;
         }
-        if (cur.lb != null && cur.rt != null) {
-            Node rtbest = nearest(p, cur.rt, thisclosest, thisclose); // take best node from rt subtree
-            Node lbbest = nearest(p, cur.lb, thisclosest, thisclose); // take best node from lb subtree
-            double rtdist = rtbest.p.distanceTo(p); // get distances to compare
-            double lbdist = lbbest.p.distanceTo(p);
-            if (rtdist < lbdist) return rtbest; // return best
-            else return lbbest;
-        } else if (cur.lb != null) {
-            return nearest(p, cur.lb, thisclosest, thisclose);
-        } else if (cur.rt != null) {
-            return nearest(p, cur.rt, thisclosest, thisclose);
-        } else {
-            return thisclose;
+        if (cur.p.distanceSquaredTo(p) < thisclosest) {
+            nearestPoint = cur.p;
         }
+
+        if (cur.isVert && p.x() < cur.p.x()) {
+            nearestPoint = nearest(p, cur.lb, nearestPoint);
+            nearestPoint = nearest(p, cur.rt, nearestPoint);
+        }
+        if (!cur.isVert && p.y() < cur.p.y()) {
+            nearestPoint = nearest(p, cur.lb, nearestPoint);
+            nearestPoint = nearest(p, cur.rt, nearestPoint);
+        }
+        return nearestPoint;
+
+        // if the point is to the left of the current node, move left, if point is to the right, move right.
+
     }
 
     public String toString() {
