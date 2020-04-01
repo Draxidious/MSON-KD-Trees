@@ -225,8 +225,6 @@ public class KdTree {
         // if node null - end of the tree
         // return nearest
         if (cur == null) return nearestPoint;
-        System.out.println("-------------");
-        System.out.println("Current point:" + cur.p);
 
 
         double thisclosest = nearestPoint.distanceSquaredTo(p);
@@ -238,7 +236,7 @@ public class KdTree {
         if (cur.p.distanceSquaredTo(p) < thisclosest) {
             nearestPoint = cur.p;
         }
-        System.out.println("Closest so far:" + nearestPoint);
+
 
         if (cur.isVert && p.x() < cur.p.x()) {
             nearestPoint = nearest(p, cur.lb, nearestPoint);
