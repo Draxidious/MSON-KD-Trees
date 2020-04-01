@@ -107,6 +107,7 @@ public class KdTree {
     // does the set contain point p?
     // you dont need to use the rectangle
     public boolean contains(Point2D p) {
+        if (p == null) throw new IllegalArgumentException("Tried to check null element");
         if (isEmpty()) return false;
         return contains(head, p, VERTICAL);
     }
@@ -189,6 +190,7 @@ public class KdTree {
     // all points that are inside the rectangle
     public Iterable<Point2D> range(RectHV rect) {
         if (isEmpty()) return null;
+        if (rect == null) throw new IllegalArgumentException();
         ArrayList<Point2D> arr = new ArrayList<>();
         range(head, rect, arr);
         return arr;
@@ -212,8 +214,10 @@ public class KdTree {
     // a nearest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D p) {
         if (isEmpty()) return null;
+        if (p == null) throw new IllegalArgumentException();
+
         Node close = head;
-        double closest = p.distanceSquaredTo(head.p);
+
         return nearest(p, head, close.p);
     }
 
@@ -221,23 +225,34 @@ public class KdTree {
         // if node null - end of the tree
         // return nearest
         if (cur == null) return nearestPoint;
+        System.out.println("-------------");
+        System.out.println("Current point:" + cur.p);
+
 
         double thisclosest = nearestPoint.distanceSquaredTo(p);
 
         if (cur.rect.distanceSquaredTo(p) > thisclosest) {
             return nearestPoint;
         }
+
         if (cur.p.distanceSquaredTo(p) < thisclosest) {
             nearestPoint = cur.p;
         }
+        System.out.println("Closest so far:" + nearestPoint);
 
         if (cur.isVert && p.x() < cur.p.x()) {
             nearestPoint = nearest(p, cur.lb, nearestPoint);
             nearestPoint = nearest(p, cur.rt, nearestPoint);
+        } else if (cur.isVert) {
+            nearestPoint = nearest(p, cur.rt, nearestPoint);
+            nearestPoint = nearest(p, cur.lb, nearestPoint);
         }
         if (!cur.isVert && p.y() < cur.p.y()) {
             nearestPoint = nearest(p, cur.lb, nearestPoint);
             nearestPoint = nearest(p, cur.rt, nearestPoint);
+        } else if (!cur.isVert) {
+            nearestPoint = nearest(p, cur.rt, nearestPoint);
+            nearestPoint = nearest(p, cur.lb, nearestPoint);
         }
         return nearestPoint;
 

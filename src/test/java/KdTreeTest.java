@@ -51,20 +51,7 @@ public class KdTreeTest {
     kd.insert(new Point2D(.8,.1));
 
   }
-  @Test
-  public void testRange2() {
-    ArrayList<Point2D> arr = new ArrayList<>();
-    arr.add(new Point2D(0.5,0.0));
 
-    kd.insert(new Point2D(.5,0.0));
-    kd.insert(new Point2D(.5,1.0));
-    kd.insert(new Point2D(0.0,1.0));
-    kd.insert(new Point2D(1.0,1.0));
-    kd.insert(new Point2D(0.0,0.5));
-
-    assertEquals(arr,kd.range(new RectHV(0,.25,.25,.75)));
-
-  }
 
   @Test
   public void testNearest() {
@@ -75,10 +62,10 @@ public class KdTreeTest {
     kd.insert(new Point2D(.2,.3));
     kd.insert(new Point2D(.4,.7));
 
-    assertEquals(kd.nearest(new Point2D(.7,.2)),new Point2D(.7,.2));
-    assertEquals(kd.nearest(new Point2D(.7,.3)),new Point2D(.7,.2));
-    assertEquals(new Point2D(.2,.3),kd.nearest(new Point2D(.2,.4)));
-    System.out.println(kd.nearest(new Point2D(.8,.2)));
+
+    assertEquals(new Point2D(.9,.6),kd.nearest(new Point2D(.959,.839)));
+
+
 
   }
 
