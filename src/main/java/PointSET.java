@@ -26,8 +26,13 @@ import edu.princeton.cs.algs4.StdDraw;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
+/**
+ * PointSet class.
+ */
 public class PointSET {
+    /**
+     * PointSet Object.
+     */
     private SET<Point2D> pointSet;
 
     // construct an empty set of points

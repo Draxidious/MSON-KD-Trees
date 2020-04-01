@@ -20,7 +20,6 @@
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.ArrayList;
@@ -28,14 +27,34 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-
+/**
+ * KDTree for princeton.
+ */
 public class KdTree {
+    /**
+     * Node class for tree.
+     */
     private static class Node {
+        /**
+         * Point for this Node.
+         */
         private Point2D p;  // the point
+        /**
+         * Rectangle that this node intersects.
+         */
         private RectHV rect; // the axis-aligned rectangle corresponding to
+        /**
+         * Left child.
+         */
         private Node lb; // the left/bottom subtree
+        /**
+         * Right child.
+         */
         private Node rt; // the right/top subtree
-        boolean isVert;
+        /**
+         * Boolean checks if it is vertical.
+         */
+        private boolean isVert;
 
         public Node(Point2D point, RectHV r, boolean vert) {
             p = point;
@@ -47,9 +66,21 @@ public class KdTree {
 
     }
 
+    /**
+     * Size of tree.
+     */
     private int size;
+    /**
+     * Root of tree.
+     */
     private Node head;
+    /**
+     * Private variable to clearly show which boolean means what.
+     */
     private final boolean VERTICAL = true;
+    /**
+     * Private variable to clearly show which boolean means what.
+     */
     private final boolean HORIZONTAL = false;
 
 
@@ -211,7 +242,7 @@ public class KdTree {
 
     }
 
-    // a nearest neighbor in the set to point p; null if the set is empty
+
     public Point2D nearest(Point2D p) {
         if (isEmpty()) return null;
         if (p == null) throw new IllegalArgumentException();
@@ -222,8 +253,7 @@ public class KdTree {
     }
 
     private Point2D nearest(Point2D p, Node cur, Point2D nearestPoint) {
-        // if node null - end of the tree
-        // return nearest
+
         if (cur == null) return nearestPoint;
 
 
@@ -254,7 +284,6 @@ public class KdTree {
         }
         return nearestPoint;
 
-        // if the point is to the left of the current node, move left, if point is to the right, move right.
 
     }
 
@@ -269,7 +298,6 @@ public class KdTree {
         return ret.toString();
     }
 
-    // unit testing of the methods (optional)
     public static void main(String[] args) {
 
     }
